@@ -44,11 +44,10 @@ useEffect(()=>{
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
     
+    const audioLoader = new THREE.AudioLoader()
     const listener = new THREE.AudioListener
     camera.add( listener )
-    const sound = new THREE.Audio( listener )
-    const audioLoader = new THREE.AudioLoader()
-
+    const stream = mmmuggers
 
     const trailMaterial = new THREE.PointsMaterial({
       size: 0.9,
@@ -65,11 +64,12 @@ useEffect(()=>{
 
     const trail = (event) => {
       event.preventDefault()
-      audioLoader.load(mmmuggers, function(buffer){
+      audioLoader.load(stream, function(buffer){
+        const sound = new THREE.Audio( listener )
         sound.setBuffer( buffer )
         sound.setLoop( true )
         sound.setVolume( 1 )
-        sound.play()
+        sound.play(0)
       })
       mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
       mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
