@@ -1,0 +1,122 @@
+import { useState, useEffect } from 'react'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import aesthete from './pics/aesthete.jpg'
+import mmmuggers from './pics/mmmuggers.mp3'
+
+function App() {
+
+useEffect(()=>{
+  const scene = new THREE.Scene
+  const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000)
+  const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true })
+  renderer.setPixelRatio( window.devicePixelRatio )
+  renderer.setSize( window.innerWidth, window.innerHeight)
+  renderer.setClearColor(0x000000, 0)
+  document.body.appendChild( renderer.domElement)
+ 
+  const texture = new THREE.TextureLoader().load(aesthete)
+  scene.background = texture
+
+  const controls = new OrbitControls(camera, renderer.domElement)
+
+  const ambientLight = new THREE.AmbientLight(0xffffff)
+
+  scene.add(ambientLight)
+
+    const sphereMaterial = new THREE.PointsMaterial({
+      size: 0.035,
+      color: 0x99ff66
+    })
+    const particlesGeometry = new THREE.BufferGeometry;
+    const particlesCount = 20000
+    const position = new Float32Array(particlesCount * 3)
+    for(let p = 0; p < particlesCount * 3; p++) {
+      position[p] = (Math.random() - 0.5) * 50
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(position, 3))
+  
+    const particlesMesh = new THREE.Points(particlesGeometry, sphereMaterial)
+    particlesMesh.position.z = 5
+    scene.add(particlesMesh)
+
+
+    const raycaster = new THREE.Raycaster()
+    const mouse = new THREE.Vector2()
+    
+    const listener = new THREE.AudioListener
+    camera.add( listener )
+    const sound = new THREE.Audio( listener )
+    const audioLoader = new THREE.AudioLoader()
+
+
+    const trailMaterial = new THREE.PointsMaterial({
+      size: 0.9,
+      color: 0xffff00
+    })
+    let trailGeometry = new THREE.BufferGeometry;
+    const trailCount = 300
+    const trailPosition = new Float32Array(trailCount * 3)
+    for(let p = 0; p < trailCount * 3; p++) {
+      trailPosition[p] = (Math.random() - 0.5) * 50
+    }
+    trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPosition, 3))
+    const particleTrail = new THREE.Points(trailGeometry, trailMaterial)
+
+    const trail = (event) => {
+      audioLoader.load(mmmuggers, function(buffer){
+        sound.setBuffer( buffer )
+        sound.setLoop( true )
+        sound.setVolume( 1 )
+        sound.play()
+      })
+      mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
+      mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
+      particleTrail.position.x = mouse.x
+      particleTrail.position.y = mouse.y
+      particleTrail.position.z = 0
+      scene.add(particleTrail)
+    }
+    
+
+    window.addEventListener('mousedown', trail, false) 
+
+    const render = () =>{
+      raycaster.setFromCamera(mouse, camera)
+      
+      const intersects = raycaster.intersectObjects( scene.children )
+
+      for(let i=0; i < intersects.length; i++){
+        intersects[i].object.material.color.set(0xff0000)
+      }
+      
+      renderer.render( scene, camera )
+
+      }
+
+    function animate() {
+      requestAnimationFrame( animate )
+      particlesMesh.rotation.z += 0.003
+      particlesMesh.rotation.y += -0.003
+      
+      particleTrail.position.x += 0.009
+      particleTrail.position.y += 0.009
+      particleTrail.position.z += 0.0012
+      particleTrail.rotation.z += 0.0002
+
+      controls.update()
+      
+      render()
+    }
+  
+    animate()
+
+
+},[])
+
+  return (
+<></>
+  )
+}
+
+export default App
