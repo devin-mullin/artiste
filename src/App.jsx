@@ -53,6 +53,7 @@ useEffect(()=>{
       size: 0.9,
       color: 0xffff00
     })
+    
     let trailGeometry = new THREE.BufferGeometry;
     const trailCount = 300
     const trailPosition = new Float32Array(trailCount * 3)
@@ -67,7 +68,7 @@ useEffect(()=>{
       audioLoader.load(stream, function(buffer){
         const sound = new THREE.Audio( listener )
         sound.setBuffer( buffer )
-        sound.setLoop( true )
+        sound.setLoop( false )
         sound.setVolume( 1 )
         sound.play(0)
       })
