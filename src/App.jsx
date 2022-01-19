@@ -64,6 +64,7 @@ useEffect(()=>{
     const particleTrail = new THREE.Points(trailGeometry, trailMaterial)
 
     const trail = (event) => {
+      event.preventDefault()
       audioLoader.load(mmmuggers, function(buffer){
         sound.setBuffer( buffer )
         sound.setLoop( true )
@@ -77,9 +78,12 @@ useEffect(()=>{
       particleTrail.position.z = 0
       scene.add(particleTrail)
     }
-    
+
+
+  
 
     window.addEventListener('mousedown', trail, false) 
+    window.addEventListener('pointerdown', trail, false)
 
     const render = () =>{
       raycaster.setFromCamera(mouse, camera)
