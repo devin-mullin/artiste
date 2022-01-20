@@ -147,7 +147,10 @@ useEffect(()=>{
 
 
   return (
-<audio id="song1" src={mmmuggers}></audio>
+<div>
+  <audio id="song1" src={mmmuggers}></audio>
+  <p>click to play a song i made a couple of years ago called "mmmuggers suck"</p>
+</div>
   )
 }
 
