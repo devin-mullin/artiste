@@ -44,7 +44,6 @@ useEffect(()=>{
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
 
-    const audioLoader = new THREE.AudioLoader()
     const listener = new THREE.AudioListener
     
     camera.add( listener )
@@ -61,21 +60,8 @@ useEffect(()=>{
   
     const playMusic = () => {
       ctx.resume().then(()=> console.log('playback started'))
-      if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
-        audioLoader.load(audioSrc, function(buffer){
-          var sound = new THREE.Audio( listener )
-          sound.setBuffer( buffer )
-          sound.setLoop( false )
-          sound.setVolume( 1 )
-          sound.play(0)
-      })}
-      else{
         const mediaElement = new Audio( stream );
         mediaElement.play();
-
-        sound.setMediaElementSource( mediaElement );
-      }
-
     }
     
 
