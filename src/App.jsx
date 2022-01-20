@@ -7,9 +7,10 @@ import mmmuggers from './pics/mmmuggers.mp3'
 function App() {
 
 useEffect(()=>{
+ 
   const scene = new THREE.Scene
   const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000)
-  const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true })
+  const renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( window.innerWidth, window.innerHeight)
   renderer.setClearColor(0x000000, 0)
@@ -18,7 +19,6 @@ useEffect(()=>{
   const texture = new THREE.TextureLoader().load(aesthete)
   scene.background = texture
 
-  const controls = new OrbitControls(camera, renderer.domElement)
 
   const ambientLight = new THREE.AmbientLight(0xffffff)
 
@@ -44,10 +44,6 @@ useEffect(()=>{
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
     
-    const audioLoader = new THREE.AudioLoader()
-    const listener = new THREE.AudioListener
-    camera.add( listener )
-    const stream = mmmuggers
 
     const trailMaterial = new THREE.PointsMaterial({
       size: 0.9,
@@ -65,26 +61,48 @@ useEffect(()=>{
 
     const trail = (event) => {
       event.preventDefault()
-      audioLoader.load(stream, function(buffer){
-        const sound = new THREE.Audio( listener )
-        sound.setBuffer( buffer )
-        sound.setLoop( false )
-        sound.setVolume( 1 )
-        sound.play(0)
-      })
       mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
       mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
       particleTrail.position.x = mouse.x
       particleTrail.position.y = mouse.y
       particleTrail.position.z = 0
       scene.add(particleTrail)
+      playMusic()
+    }
+
+    const audioLoader = new THREE.AudioLoader()
+    const listener = new THREE.AudioListener
+    camera.add( listener )
+    const stream = mmmuggers
+
+    const playMusic = () => {
+      if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
+        audioLoader.load(stream, function(buffer){
+          const sound = new THREE.Audio( listener )
+          sound.setBuffer( buffer )
+          sound.setLoop( false )
+          sound.setVolume( 1 )
+          sound.play(0)
+      })}
+      else{
+        const mediaElement = new Audio( stream );
+        mediaElement.play();
+
+        sound.setMediaElementSource( mediaElement );
+      }
+
     }
 
 
-  
 
+    const onWindowResize = () => {
+      renderer.setSize( window.innerWidth, window.innerHeight )
+    }
+
+    window.addEventListener('resize', onWindowResize )
     window.addEventListener('mousedown', trail, false) 
     window.addEventListener('pointerdown', trail, false)
+
 
     const render = () =>{
       raycaster.setFromCamera(mouse, camera)
@@ -94,7 +112,7 @@ useEffect(()=>{
       for(let i=0; i < intersects.length; i++){
         intersects[i].object.material.color.set(0xff0000)
       }
-      
+    
       renderer.render( scene, camera )
 
       }
@@ -108,14 +126,11 @@ useEffect(()=>{
       particleTrail.position.y += 0.009
       particleTrail.position.z += 0.0012
       particleTrail.rotation.z += 0.0002
-
-      controls.update()
       
       render()
     }
   
     animate()
-
 
 },[])
 
