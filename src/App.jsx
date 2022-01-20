@@ -43,6 +43,40 @@ useEffect(()=>{
 
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
+
+    const audioLoader = new THREE.AudioLoader()
+    const listener = new THREE.AudioListener
+    
+    camera.add( listener )
+    const stream = mmmuggers
+
+    const ctx = new AudioContext()
+    let audio = document.querySelector('#song1')
+    const audioSrc = ctx.createMediaElementSource(audio)
+    const analyser = ctx.createAnalyser()
+    
+    audioSrc.connect(analyser)
+    audioSrc.connect(ctx.destination)
+    const frequencyData = new Uint8Array(analyser.frequencyBinCount)
+  
+    const playMusic = () => {
+      ctx.resume().then(()=> console.log('playback started'))
+      if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
+        audioLoader.load(audioSrc, function(buffer){
+          var sound = new THREE.Audio( listener )
+          sound.setBuffer( buffer )
+          sound.setLoop( false )
+          sound.setVolume( 1 )
+          sound.play(0)
+      })}
+      else{
+        const mediaElement = new Audio( stream );
+        mediaElement.play();
+
+        sound.setMediaElementSource( mediaElement );
+      }
+
+    }
     
 
     const trailMaterial = new THREE.PointsMaterial({
@@ -70,31 +104,6 @@ useEffect(()=>{
       playMusic()
     }
 
-    const audioLoader = new THREE.AudioLoader()
-    const listener = new THREE.AudioListener
-    camera.add( listener )
-    const stream = mmmuggers
-
-    const playMusic = () => {
-      if ( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) ) {
-        audioLoader.load(stream, function(buffer){
-          const sound = new THREE.Audio( listener )
-          sound.setBuffer( buffer )
-          sound.setLoop( false )
-          sound.setVolume( 1 )
-          sound.play(0)
-      })}
-      else{
-        const mediaElement = new Audio( stream );
-        mediaElement.play();
-
-        sound.setMediaElementSource( mediaElement );
-      }
-
-    }
-
-
-
     const onWindowResize = () => {
       renderer.setSize( window.innerWidth, window.innerHeight )
     }
@@ -112,7 +121,9 @@ useEffect(()=>{
       for(let i=0; i < intersects.length; i++){
         intersects[i].object.material.color.set(0xff0000)
       }
-    
+      
+      analyser.getByteFrequencyData(frequencyData)
+
       renderer.render( scene, camera )
 
       }
@@ -131,11 +142,12 @@ useEffect(()=>{
     }
   
     animate()
-
 },[])
 
+
+
   return (
-<></>
+<audio id="song1" src={mmmuggers}></audio>
   )
 }
 
