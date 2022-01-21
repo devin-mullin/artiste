@@ -129,7 +129,7 @@ useEffect(()=>{
   
     animate()
 
-    alert('click once to start animation and play "mmmuggers suck", a song i made a couple of years ago')
+    alert('click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago')
 },[])
 
 
