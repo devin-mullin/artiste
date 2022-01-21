@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import aesthete from './pics/aesthete.jpg'
 import mmmuggers from './pics/mmmuggers.mp3'
 import dogsprite from './pics/dogsprite.png'
+import myorb from './pics/myorb.png'
 
 function App() {
 
@@ -25,12 +26,17 @@ useEffect(()=>{
 
   scene.add(ambientLight)
 
+  const orb = new THREE.TextureLoader().load(myorb)
     const sphereMaterial = new THREE.PointsMaterial({
-      size: 0.035,
-      color: 0x99ff66
+      size: 0.15,
+      sizeAttenuation: true,
+      map: orb,
+      alphaTest: 0.5,
+      transparent: true
     })
+    sphereMaterial.color.setHSL( 1.0, 0.3, 0.7 )
     const particlesGeometry = new THREE.BufferGeometry;
-    const particlesCount = 20000
+    const particlesCount = 2000
     const position = new Float32Array(particlesCount * 3)
     for(let p = 0; p < particlesCount * 3; p++) {
       position[p] = (Math.random() - 0.5) * 50
@@ -74,7 +80,7 @@ useEffect(()=>{
     const sprite = new THREE.TextureLoader().load(dogsprite)
 
     const trailMaterial = new THREE.PointsMaterial({
-      size: 0.6,
+      size: 0.9,
       color: 0xee7676,
       sizeAttenuation: true,
       map: sprite,
@@ -107,10 +113,24 @@ useEffect(()=>{
       renderer.setSize( window.innerWidth, window.innerHeight )
     }
 
+    let mouseX = 0
+    let mouseY = 0
+    let windowHalfX = window.innerWidth / 2
+    let windowHalfY = window.innerHeight / 2
+
+
+    const onPointerMove = ( event ) => {
+      if ( event.isPrimary === false ) return
+
+      mouseX = event.clientX - windowHalfX;
+      mouseY = event.clientY - windowHalfY;
+
+    }
+
     window.addEventListener('resize', onWindowResize )
     window.addEventListener('mousedown', trail, false) 
     window.addEventListener('pointerdown', trail, false)
-
+    document.body.addEventListener( 'pointermove', onPointerMove );
 
     const render = () =>{
       raycaster.setFromCamera(mouse, camera)
@@ -121,6 +141,16 @@ useEffect(()=>{
       //   intersects[i].object.material.color.set(0xff0000)
       // }
       
+      const time = Date.now() * 0.00005
+
+      camera.position.x += ( mouseX - camera.position.x ) * 0.0005
+      camera.position.y += ( mouseY - camera.position.y) * 0.0005
+
+      camera.lookAt( scene.position )
+
+      const h = ( 360 * (1.0 + time) % 360 ) / 360
+      sphereMaterial.color.setHSL( h, 0.5, 0.5 )
+
       analyser.getByteFrequencyData(frequencyData)
 
       renderer.render( scene, camera )
