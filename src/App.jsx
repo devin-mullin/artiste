@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import aesthete from './pics/aesthete.jpg'
 import mmmuggers from './pics/mmmuggers.mp3'
+import dogsprite from './pics/dogsprite.png'
 
 function App() {
 
@@ -40,6 +41,12 @@ useEffect(()=>{
     particlesMesh.position.z = 5
     scene.add(particlesMesh)
 
+    const cubeGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+    const cubeMaterial = new THREE.MeshBasicMaterial( {color: 0xffff32, wireframe: true} );
+    const cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+    cube.position.z = -20
+    scene.add( cube );
+
 
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
@@ -64,11 +71,17 @@ useEffect(()=>{
         mediaElement.play();
     }
     
+    const sprite = new THREE.TextureLoader().load(dogsprite)
 
     const trailMaterial = new THREE.PointsMaterial({
-      size: 0.9,
-      color: 0xffff00
+      size: 0.6,
+      color: 0xee7676,
+      sizeAttenuation: true,
+      map: sprite,
+      alphaTest: 0.5,
+      transparent: true
     })
+
     
     let trailGeometry = new THREE.BufferGeometry;
     const trailCount = 300
@@ -104,9 +117,9 @@ useEffect(()=>{
       
       const intersects = raycaster.intersectObjects( scene.children )
 
-      for(let i=0; i < intersects.length; i++){
-        intersects[i].object.material.color.set(0xff0000)
-      }
+      // for(let i=0; i < intersects.length; i++){
+      //   intersects[i].object.material.color.set(0xff0000)
+      // }
       
       analyser.getByteFrequencyData(frequencyData)
 
@@ -124,6 +137,9 @@ useEffect(()=>{
       particleTrail.position.z += 0.0012
       particleTrail.rotation.z += 0.0002
       
+      cube.rotation.z += 0.03
+      cube.rotation.y += 0.03
+
       render()
     }
   
