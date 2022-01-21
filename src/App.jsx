@@ -41,10 +41,10 @@ useEffect(()=>{
     particlesMesh.position.z = 5
     scene.add(particlesMesh)
 
-    const cubeGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+    const cubeGeometry = new THREE.TorusKnotGeometry( 10, 3, 25, 16 )
     const cubeMaterial = new THREE.MeshBasicMaterial( {color: 0xffff32, wireframe: true} );
     const cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-    cube.position.z = -20
+    cube.position.z = -50
     scene.add( cube );
 
 
@@ -139,6 +139,9 @@ useEffect(()=>{
       
       cube.rotation.z += 0.03
       cube.rotation.y += 0.03
+      cube.rotation.z += 0.008
+
+      
 
       render()
     }
