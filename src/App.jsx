@@ -128,16 +128,17 @@ useEffect(()=>{
     }
   
     animate()
+
+    alert('click once to start animation and play "mmmuggers suck", a song i made a couple of years ago')
 },[])
 
 
 
   return (
-<div>
+
   <audio id="song1" src={mmmuggers}></audio>
-  <p>click to play a song i made a couple of years ago called "mmmuggers suck"</p>
-</div>
-  )
+
+) 
 }
 
 export default App

@@ -40,3 +40,12 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+#top {
+	position: absolute;
+	top: 900px;
+	width: 50%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+}
