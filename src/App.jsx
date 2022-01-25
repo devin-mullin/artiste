@@ -7,6 +7,7 @@ import dogsprite from './pics/dogsprite.png'
 import myorb from './pics/myorb.png'
 
 function App() {
+ let [isPlaying, setIsPlaying] = useState(false) 
 
 useEffect(()=>{
  
@@ -70,11 +71,15 @@ useEffect(()=>{
     audioSrc.connect(analyser)
     audioSrc.connect(ctx.destination)
     const frequencyData = new Uint8Array(analyser.frequencyBinCount)
-  
+    const mediaElement = new Audio( stream );
+    
     const playMusic = () => {
+      setIsPlaying(!isPlaying)
       ctx.resume().then(()=> console.log('playback started'))
-        const mediaElement = new Audio( stream );
-        mediaElement.play();
+        if(isPlaying = true){
+        mediaElement.play()}
+        else{ 
+        mediaElement.pause()}
     }
     
     const sprite = new THREE.TextureLoader().load(dogsprite)
