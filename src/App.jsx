@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { DragControls } from 'three/examples/jsm/controls/DragControls'
 import aesthete from './pics/aesthete.jpg'
 import mmmuggers from './pics/mmmuggers.mp3'
 import dogsprite from './pics/dogsprite.png'
@@ -72,7 +73,7 @@ useEffect(()=>{
     audioSrc.connect(ctx.destination)
     const frequencyData = new Uint8Array(analyser.frequencyBinCount)
     const mediaElement = new Audio( stream );
-    
+
     const playMusic = () => {
       setIsPlaying(!isPlaying)
       ctx.resume().then(()=> console.log('playback started'))
@@ -132,10 +133,24 @@ useEffect(()=>{
 
     }
 
+    const orbitControls = new OrbitControls(camera, renderer.domElement)
+    const dragControls = new DragControls([cube], camera, renderer.domElement)
+
+    dragControls.addEventListener('dragstart', function (event) {
+      orbitControls.enabled = false
+      event.object.material.opacity = 0.33
+      })
+
+    dragControls.addEventListener('dragend', function (event) {
+      orbitControls.enabled = true
+      event.object.material.opacity = 1
+      })
+
     window.addEventListener('resize', onWindowResize )
     window.addEventListener('mousedown', trail, false) 
     window.addEventListener('pointerdown', trail, false)
-    document.body.addEventListener( 'pointermove', onPointerMove );
+    document.body.addEventListener( 'pointermove', onPointerMove )
+
 
     const render = () =>{
       raycaster.setFromCamera(mouse, camera)
@@ -183,7 +198,7 @@ useEffect(()=>{
   
     animate()
 
-    alert('click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago')
+    alert('click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago. move your mouse around to travel through the orb cloud')
 },[])
 
 
