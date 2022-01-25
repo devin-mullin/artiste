@@ -138,12 +138,10 @@ useEffect(()=>{
 
     dragControls.addEventListener('dragstart', function (event) {
       orbitControls.enabled = false
-      event.object.material.opacity = 0.33
       })
 
     dragControls.addEventListener('dragend', function (event) {
       orbitControls.enabled = true
-      event.object.material.opacity = 1
       })
 
     window.addEventListener('resize', onWindowResize )
@@ -198,7 +196,7 @@ useEffect(()=>{
   
     animate()
 
-    alert('click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago. move your mouse around to travel through the orb cloud')
+    alert('click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago. use your mouse & scroll wheel / touchscreen around to travel through the orb cloud')
 },[])
 
 
