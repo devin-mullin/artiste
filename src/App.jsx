@@ -120,6 +120,7 @@ useEffect(()=>{
       ref.current++
       }
     } else if(ref.current = 1) {
+      scene.remove(particleTrail)
       pauseMusic()
       ref.current--
     }
@@ -144,6 +145,32 @@ useEffect(()=>{
 
     }
 
+    const onTouchStart = (event) => {
+      raycaster.setFromCamera(mouse, camera)
+      let isInterSected = raycaster.intersectObject( cube )
+      if(isInterSected){
+      mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
+      mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
+      particleTrail.position.x = mouse.x
+      particleTrail.position.y = mouse.y
+      particleTrail.position.z = 0
+      scene.add(particleTrail)
+      playMusic()
+      ref.current++
+    }
+  }
+
+    const onTouchMove = () => {
+      particlesMesh.rotation.z += -0.0003
+      particlesMesh.rotation.y += 0.0003
+      
+      particleTrail.position.x += -0.0009
+      particleTrail.position.y += -0.0009
+      particleTrail.position.z += -0.00012
+      particleTrail.rotation.z += -0.00002
+      
+    } 
+
     const orbitControls = new OrbitControls(camera, renderer.domElement)
     const dragControls = new DragControls([cube], camera, renderer.domElement)
 
@@ -157,7 +184,8 @@ useEffect(()=>{
 
     window.addEventListener('resize', onWindowResize )
     window.addEventListener('mousedown', trail, false) 
-    // window.addEventListener('pointerdown', trail, false)
+    window.addEventListener('touchstart', onTouchStart, false)
+    window.addEventListener('touchmove', onTouchMove, false)
     document.body.addEventListener( 'pointermove', onPointerMove )
 
 
