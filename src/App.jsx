@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { DragControls } from 'three/examples/jsm/controls/DragControls'
+import gone from './pics/gone.png'
 import aesthete from './pics/aesthete.jpg'
 import mmmuggers from './pics/mmmuggers.mp3'
 import dogsprite from './pics/dogsprite.png'
@@ -12,6 +13,9 @@ function App() {
 
 useEffect(()=>{
  
+
+//bones
+
   const scene = new THREE.Scene
   const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000)
   const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -28,6 +32,7 @@ useEffect(()=>{
 
   scene.add(ambientLight)
 
+// orbs to ponder
   const orb = new THREE.TextureLoader().load(myorb)
     const sphereMaterial = new THREE.PointsMaterial({
       size: 0.15,
@@ -49,13 +54,26 @@ useEffect(()=>{
     particlesMesh.position.z = 5
     scene.add(particlesMesh)
 
+// pipe  
     const cubeGeometry = new THREE.TorusKnotGeometry( 10, 3, 25, 16 )
     const cubeMaterial = new THREE.MeshBasicMaterial( {color: 0xffff32, wireframe: true} );
     const cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-    cube.position.z = -50
+    cube.position.z = 0
+    cube.position.x 
     scene.add( cube );
 
+  // text
+    const goneMap = new THREE.TextureLoader().load(gone)
+    const textGeometry = new THREE.BoxGeometry(10,10,10,10)
+    const textMaterial = new THREE.MeshBasicMaterial( {
+      map: goneMap
+    })
+    const goneText = new THREE.Mesh(textGeometry, textMaterial)
+    
 
+   
+
+// audio
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
 
@@ -84,6 +102,7 @@ useEffect(()=>{
         audio.pause()
     }
 
+// dog trail
     const sprite = new THREE.TextureLoader().load(dogsprite)
 
     const trailMaterial = new THREE.PointsMaterial({
@@ -97,7 +116,7 @@ useEffect(()=>{
 
     
     let trailGeometry = new THREE.BufferGeometry;
-    const trailCount = 300
+    const trailCount = 3000
     const trailPosition = new Float32Array(trailCount * 3)
     for(let p = 0; p < trailCount * 3; p++) {
       trailPosition[p] = (Math.random() - 0.5) * 50
@@ -107,6 +126,8 @@ useEffect(()=>{
 
     const trail = (event) => {
       if(ref.current === 0) {
+      scene.remove(goneText)
+      cube.position.z = 0 
       raycaster.setFromCamera(mouse, camera)
       let isInterSected = raycaster.intersectObject( cube )
       if(isInterSected){
@@ -119,44 +140,51 @@ useEffect(()=>{
       playMusic()
       ref.current++
       }
-    } else if(ref.current = 1) {
+    } else if(ref.current === 1) {
       scene.remove(particleTrail)
+      cube.position.x = 150
+      goneText.position.x = -5
+      goneText.position.z = 0
+      scene.add(goneText)
       pauseMusic()
       ref.current--
+      
     }
      
     }
 
+
+// event handlers
     const onWindowResize = () => {
       renderer.setSize( window.innerWidth, window.innerHeight )
     }
 
     let mouseX = 0
     let mouseY = 0
-    let windowHalfX = window.innerWidth / 4
-    let windowHalfY = window.innerHeight / 4
+    let windowHalfX = window.innerWidth / 8
+    let windowHalfY = window.innerHeight / 8
 
 
     const onPointerMove = ( event ) => {
-      if ( event.isPrimary === false ) return
-
       mouseX = event.clientX - windowHalfX;
       mouseY = event.clientY - windowHalfY;
 
     }
 
     const onTouchStart = (event) => {
+      if(ref.current === 0){
       raycaster.setFromCamera(mouse, camera)
       let isInterSected = raycaster.intersectObject( cube )
       if(isInterSected){
-      mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
-      mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
-      particleTrail.position.x = mouse.x
-      particleTrail.position.y = mouse.y
-      particleTrail.position.z = 0
-      scene.add(particleTrail)
-      playMusic()
-      ref.current++
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
+        mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
+        particleTrail.position.x = mouse.x
+        particleTrail.position.y = mouse.y
+        particleTrail.position.z = mouse.z
+        scene.add(particleTrail)
+        playMusic()
+        ref.current++
+      }
     }
   }
 
@@ -189,6 +217,7 @@ useEffect(()=>{
     document.body.addEventListener( 'pointermove', onPointerMove )
 
 
+// render and animate
     const render = () =>{
       raycaster.setFromCamera(mouse, camera)
 
@@ -223,6 +252,10 @@ useEffect(()=>{
       cube.rotation.y += 0.03
       cube.rotation.z += 0.008
 
+      goneText.rotation.z += 0.03
+      goneText.rotation.y = -0.03
+      goneText.rotation.x - 0.03
+
       
 
       render()
@@ -230,7 +263,7 @@ useEffect(()=>{
   
     animate()
 
-    alert('click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago. use your mouse & scroll wheel / touchscreen around to travel through the orb cloud')
+    alert('click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago. move your mouse / scroll wheel / touchscreen around to travel through the orb cloud')
 },[])
 
 
