@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { DragControls } from 'three/examples/jsm/controls/DragControls'
@@ -8,7 +8,7 @@ import dogsprite from './pics/dogsprite.png'
 import myorb from './pics/myorb.png'
 
 function App() {
- let [isPlaying, setIsPlaying] = useState(false) 
+ const ref = useRef(0)
 
 useEffect(()=>{
  
@@ -75,14 +75,15 @@ useEffect(()=>{
     const mediaElement = new Audio( stream );
 
     const playMusic = () => {
-      setIsPlaying(!isPlaying)
       ctx.resume().then(()=> console.log('playback started'))
-        if(isPlaying = true){
-        mediaElement.play()}
-        else{ 
-        mediaElement.pause()}
+        audio.play()
     }
-    
+
+    const pauseMusic = () =>{
+      ctx.suspend().then(()=> console.log('playback paused'))
+        audio.pause()
+    }
+
     const sprite = new THREE.TextureLoader().load(dogsprite)
 
     const trailMaterial = new THREE.PointsMaterial({
@@ -105,7 +106,10 @@ useEffect(()=>{
     const particleTrail = new THREE.Points(trailGeometry, trailMaterial)
 
     const trail = (event) => {
-      event.preventDefault()
+      if(ref.current === 0) {
+      raycaster.setFromCamera(mouse, camera)
+      let isInterSected = raycaster.intersectObject( cube )
+      if(isInterSected){
       mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
       mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
       particleTrail.position.x = mouse.x
@@ -113,6 +117,13 @@ useEffect(()=>{
       particleTrail.position.z = 0
       scene.add(particleTrail)
       playMusic()
+      ref.current++
+      }
+    } else if(ref.current = 1) {
+      pauseMusic()
+      ref.current--
+    }
+     
     }
 
     const onWindowResize = () => {
@@ -121,8 +132,8 @@ useEffect(()=>{
 
     let mouseX = 0
     let mouseY = 0
-    let windowHalfX = window.innerWidth / 2
-    let windowHalfY = window.innerHeight / 2
+    let windowHalfX = window.innerWidth / 4
+    let windowHalfY = window.innerHeight / 4
 
 
     const onPointerMove = ( event ) => {
@@ -146,18 +157,13 @@ useEffect(()=>{
 
     window.addEventListener('resize', onWindowResize )
     window.addEventListener('mousedown', trail, false) 
-    window.addEventListener('pointerdown', trail, false)
+    // window.addEventListener('pointerdown', trail, false)
     document.body.addEventListener( 'pointermove', onPointerMove )
 
 
     const render = () =>{
       raycaster.setFromCamera(mouse, camera)
-      
-      const intersects = raycaster.intersectObjects( scene.children )
 
-      // for(let i=0; i < intersects.length; i++){
-      //   intersects[i].object.material.color.set(0xff0000)
-      // }
       
       const time = Date.now() * 0.00005
 
