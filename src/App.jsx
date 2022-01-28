@@ -171,16 +171,11 @@ useEffect(()=>{
 
     }
 
-    const onTouchStart = (event) => {
+    const onTouchStart = () => {
       if(ref.current === 0){
       raycaster.setFromCamera(mouse, camera)
       let isInterSected = raycaster.intersectObject( cube )
       if(isInterSected){
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
-        mouse.y = ( event.clientY / window.innerHeight ) * 2 + 1
-        particleTrail.position.x = mouse.x
-        particleTrail.position.y = mouse.y
-        particleTrail.position.z = mouse.z
         scene.add(particleTrail)
         playMusic()
         ref.current++
