@@ -128,6 +128,8 @@ useEffect(()=>{
       if(ref.current === 0) {
       scene.remove(goneText)
       cube.position.z = 0 
+      cube.position.x = 0
+      cube.position.y = 0
       raycaster.setFromCamera(mouse, camera)
       let isInterSected = raycaster.intersectObject( cube )
       if(isInterSected){
