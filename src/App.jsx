@@ -35,18 +35,18 @@ useEffect(()=>{
 // orbs to ponder
   const orb = new THREE.TextureLoader().load(myorb)
     const sphereMaterial = new THREE.PointsMaterial({
-      size: 0.15,
+      size: 0.35,
       sizeAttenuation: true,
       map: orb,
       alphaTest: 0.5,
       transparent: true
     })
-    sphereMaterial.color.setHSL( 1.0, 0.3, 0.7 )
+    sphereMaterial.color.setHSL( 0.2, 0.2, 0.7 )
     const particlesGeometry = new THREE.BufferGeometry;
-    const particlesCount = 2000
+    const particlesCount = 4000
     const position = new Float32Array(particlesCount * 3)
     for(let p = 0; p < particlesCount * 3; p++) {
-      position[p] = (Math.random() - 0.5) * 50
+      position[p] = (Math.random() - 0.5) * 100
     }
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(position, 3))
   
