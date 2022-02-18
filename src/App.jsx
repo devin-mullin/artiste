@@ -116,10 +116,10 @@ useEffect(()=>{
 
     
     let trailGeometry = new THREE.BufferGeometry;
-    const trailCount = 3000
+    const trailCount = 6000
     const trailPosition = new Float32Array(trailCount * 3)
     for(let p = 0; p < trailCount * 3; p++) {
-      trailPosition[p] = (Math.random() - 0.5) * 50
+      trailPosition[p] = (Math.random() - 0.5) * 150
     }
     trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPosition, 3))
     const particleTrail = new THREE.Points(trailGeometry, trailMaterial)
