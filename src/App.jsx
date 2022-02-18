@@ -175,15 +175,28 @@ useEffect(()=>{
 
     const onTouchStart = () => {
       if(ref.current === 0){
+      scene.remove(particleTrail)
+      scene.add(goneText)
+      pauseMusic()
       raycaster.setFromCamera(mouse, camera)
       let isInterSected = raycaster.intersectObject( cube )
       if(isInterSected){
-        scene.add(particleTrail)
-        playMusic()
         ref.current++
       }
     }
   }
+
+   const onTouchEnd = () => {
+    if(ref.current === 1) {
+      cube.position.x = 150
+      goneText.position.x = -5
+      goneText.position.z = 0
+      scene.remove(goneText)
+      scene.add(particleTrail)
+      playMusic()
+      ref.current--   
+    }
+   }
 
     const onTouchMove = () => {
       particlesMesh.rotation.z += -0.0003
@@ -211,6 +224,7 @@ useEffect(()=>{
     window.addEventListener('mousedown', trail, false) 
     window.addEventListener('touchstart', onTouchStart, false)
     window.addEventListener('touchmove', onTouchMove, false)
+    window.addEventListener('touchend', onTouchEnd, false)
     document.body.addEventListener( 'pointermove', onPointerMove )
 
 
