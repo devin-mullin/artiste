@@ -289,7 +289,7 @@ function App() {
     animate();
 
     alert(
-      'click or tap clouds once to start animation and play "mmmuggers suck", a song i made a couple of years ago. click again to pause/resume. move your mouse / scroll wheel / touchscreen around to travel through the orb cloud'
+      'click or tap screen twice to start animation and play "mmmuggers suck", a song i made a couple of years ago. click again to pause/resume. move your mouse / scroll wheel / touchscreen around to travel through the orb cloud'
     );
   }, []);
 
