@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import gone from "./pics/gone.png";
-import aesthete from "./pics/aesthete.jpg";
+import clouds from "./pics/clouds.jpg";
 import mmmuggers from "./pics/mmmuggers.mp3";
 import dogsprite from "./pics/dogsprite.png";
 import myorb from "./pics/myorb.png";
@@ -27,7 +27,7 @@ function App() {
     renderer.setClearColor(0x000000, 0);
     document.body.appendChild(renderer.domElement);
 
-    const texture = new THREE.TextureLoader().load(aesthete);
+    const texture = new THREE.TextureLoader().load(clouds);
     scene.background = texture;
 
     const ambientLight = new THREE.AmbientLight(0xffffff);
