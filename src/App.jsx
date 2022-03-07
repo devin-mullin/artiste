@@ -60,14 +60,14 @@ function App() {
     scene.add(particlesMesh);
 
     // pipe
-    const cubeGeometry = new THREE.TorusKnotGeometry(10, 3, 25, 16);
+    const cubeGeometry = new THREE.TorusKnotGeometry(10, 15, 25, 16);
     const cubeMaterial = new THREE.MeshBasicMaterial({
       color: 0xffff32,
       wireframe: true,
     });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.position.z = 0;
-    cube.position.x;
+    cube.position.x = 10;
     scene.add(cube);
 
     // text
