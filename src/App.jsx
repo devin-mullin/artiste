@@ -60,7 +60,7 @@ function App() {
     scene.add(particlesMesh);
 
     // pipe
-    const cubeGeometry = new THREE.TorusKnotGeometry(10, 15, 25, 16);
+    const cubeGeometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
     const cubeMaterial = new THREE.MeshBasicMaterial({
       color: 0xffff32,
       wireframe: true,
@@ -134,9 +134,9 @@ function App() {
     const trail = (event) => {
       if (ref.current === 0) {
         scene.remove(goneText);
-        // cube.position.z = 0;
-        // cube.position.x = 0;
-        // cube.position.y = 0;
+        cube.position.z = 0;
+        cube.position.x = -150;
+        cube.position.y = 0;
         raycaster.setFromCamera(mouse, camera);
         let isInterSected = raycaster.intersectObject(cube);
         if (isInterSected) {
