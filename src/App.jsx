@@ -67,7 +67,7 @@ function App() {
     });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.position.z = 0;
-    cube.position.x = 10;
+    cube.position.x = -50;
     scene.add(cube);
 
     // text
@@ -134,9 +134,9 @@ function App() {
     const trail = (event) => {
       if (ref.current === 0) {
         scene.remove(goneText);
-        cube.position.z = 0;
-        cube.position.x = 0;
-        cube.position.y = 0;
+        // cube.position.z = 0;
+        // cube.position.x = 0;
+        // cube.position.y = 0;
         raycaster.setFromCamera(mouse, camera);
         let isInterSected = raycaster.intersectObject(cube);
         if (isInterSected) {
